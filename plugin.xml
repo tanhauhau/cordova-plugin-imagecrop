@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="com.lihau.profile-image-crop" version="0.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>profile-image-crop</name>
+    <js-module name="ProfileImageCrop" src="www/profile-image-crop.js">
+        <clobbers target="cordova.plugins.profile-image-crop" />
+    </js-module>
+    <platform name="android">
+        <config-file target="config.xml" parent="/*">
+            <feature name="ProfileImageCrop">
+                <param name="android-package" value="com.lihau.picrop.ProfileImageCrop"/>
+            </feature>
+        </config-file>
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <activity
+                android:configChanges="orientation|screenSize"
+                android:name="com.lihau.picrop.ProfileImageCropActivity"
+                android:theme="@style/AppTheme.NoActionBar" />
+        </config-file>
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+        </config-file>
+        <source-file src="src/android/com/lihau/picrop/ProfileImageCrop.java" target-dir="src/com/lihau/picrop"/>
+        <source-file src="src/android/com/lihau/picrop/ProfileImageCropActivity.java" target-dir="src/com/lihau/picrop"/>
+
+        <source-file src="src/android/com/adamstyrc/cookiecutter/Circle.java" target-dir="src/com/adamstyrc/cookiecutter" />
+        <source-file src="src/android/com/adamstyrc/cookiecutter/CookieCutterShape.java" target-dir="src/com/adamstyrc/cookiecutter" />
+        <source-file src="src/android/com/adamstyrc/cookiecutter/Logger.java" target-dir="src/com/adamstyrc/cookiecutter" />
+        <source-file src="src/android/com/adamstyrc/cookiecutter/CookieCutterImageView.java" target-dir="src/com/adamstyrc/cookiecutter" />
+        <source-file src="src/android/com/adamstyrc/cookiecutter/CookieCutterTouchListener.java" target-dir="src/com/adamstyrc/cookiecutter" />
+        <source-file src="src/android/com/adamstyrc/cookiecutter/MatrixParams.java" target-dir="src/com/adamstyrc/cookiecutter" />
+        <source-file src="src/android/com/adamstyrc/cookiecutter/CookieCutterParams.java" target-dir="src/com/adamstyrc/cookiecutter" />
+        <source-file src="src/android/com/adamstyrc/cookiecutter/ImageUtils.java" target-dir="src/com/adamstyrc/cookiecutter" />
+
+        <source-file src="src/android/res/picrop_main.xml" target-dir="res/layout"/>
+    </platform>
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="ProfileImageCrop">
+                <param name="ios-package" value="ProfileImageCrop"/>
+            </feature>
+        </config-file>
+        <header-file src="src/ios/ProfileImageCrop.h" />
+        <source-file src="src/ios/ProfileImageCrop.m" />
+        <header-file src="src/ios/Library/CGGeometry+RSKImageCropper.h" />
+        <source-file src="src/ios/Library/CGGeometry+RSKImageCropper.m" />
+        <header-file src="src/ios/Library/RSKInternalUtility.h" />
+        <source-file src="src/ios/Library/RSKInternalUtility.m" />
+        <header-file src="src/ios/Library/RSKImageCropViewController+Protected.h" />
+        <header-file src="src/ios/Library/RSKTouchView.h" />
+        <source-file src="src/ios/Library/RSKTouchView.m" />
+        <header-file src="src/ios/Library/RSKImageCropViewController.h" />
+        <source-file src="src/ios/Library/RSKImageCropViewController.m" />
+        <header-file src="src/ios/Library/UIApplication+RSKImageCropper.h" />
+        <source-file src="src/ios/Library/UIApplication+RSKImageCropper.m" />
+        <header-file src="src/ios/Library/UIImage+RSKImageCropper.h" />
+        <source-file src="src/ios/Library/UIImage+RSKImageCropper.m" />
+        <header-file src="src/ios/Library/RSKImageScrollView.h" />
+        <source-file src="src/ios/Library/RSKImageScrollView.m" />
+        <resource-file src="src/ios/Library/RSKImageCropperStrings.bundle" />
+    </platform>
+    <dependency
+        id="es6-promise-plugin"
+        url="https://github.com/vstirbu/PromisesPlugin.git">
+    </dependency>
+</plugin>
