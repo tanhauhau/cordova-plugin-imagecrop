@@ -17,6 +17,7 @@
         android:paddingTop="50dp"
         android:text="Move and Scale"/>
     <Button
+        android:id="@+id/cancelBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|left"
@@ -26,6 +27,7 @@
         android:padding="16dp"
         android:text="Cancel"/>
     <Button
+        android:id="@+id/chooseBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
