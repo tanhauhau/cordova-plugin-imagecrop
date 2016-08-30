@@ -1,0 +1,27 @@
+{
+  "name": "profile-image-crop",
+  "version": "0.0.1",
+  "description": "Crop images for profile picture",
+  "cordova": {
+    "id": "com.lihau.profileimagecrop",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios",
+    "imagecrop",
+    "crop",
+    "profile",
+    "circle",
+    "image",
+    "circle-crop",
+    "profile-crop",
+    "profile-image"
+  ],
+  "author": "Tan Li Hau",
+  "license": "MIT"
+}
