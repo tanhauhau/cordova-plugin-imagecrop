@@ -1,5 +1,11 @@
 # profile-image-crop
 
+# Install
+
+```bash
+$ cordova plugin add profile-image-crop
+```
+
 # Demo
 
 ### Android
@@ -26,8 +32,18 @@ window.ProfileImageCrop.crop({
    console.log(e);
 })
 ```
-# License
 
+# Library Used
+
+# Android
+
+[cookie-cutter](https://github.com/adamstyrc/cookie-cutter) by adamstyrc
+
+# iOS
+
+[RSKImagecropper](https://github.com/ruslanskorb/RSKImageCropper) by ruslanskorb
+
+# License
 
 The MIT License (MIT)
 
