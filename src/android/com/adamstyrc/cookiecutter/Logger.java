@@ -1,5 +1,6 @@
 package com.adamstyrc.cookiecutter;
 
+import android.support.v7.appcompat.BuildConfig;
 import android.util.Log;
 
 
