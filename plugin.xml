@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="profile-image-crop" version="0.0.3" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+<plugin id="profile-image-crop" version="0.0.4" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>profile-image-crop</name>
     <js-module name="ProfileImageCrop" src="www/profile-image-crop.js">
         <clobbers target="cordova.plugins.profile-image-crop" />
@@ -24,8 +24,6 @@
         <source-file src="src/android/com/lihau/picrop/ProfileImageCropActivity.java" target-dir="src/com/lihau/picrop"/>
 
         <source-file src="src/android/com/adamstyrc/cookiecutter/Circle.java" target-dir="src/com/adamstyrc/cookiecutter" />
-        <source-file src="src/android/com/adamstyrc/cookiecutter/CookieCutterShape.java" target-dir="src/com/adamstyrc/cookiecutter" />
-        <source-file src="src/android/com/adamstyrc/cookiecutter/Logger.java" target-dir="src/com/adamstyrc/cookiecutter" />
         <source-file src="src/android/com/adamstyrc/cookiecutter/CookieCutterImageView.java" target-dir="src/com/adamstyrc/cookiecutter" />
         <source-file src="src/android/com/adamstyrc/cookiecutter/CookieCutterTouchListener.java" target-dir="src/com/adamstyrc/cookiecutter" />
         <source-file src="src/android/com/adamstyrc/cookiecutter/MatrixParams.java" target-dir="src/com/adamstyrc/cookiecutter" />
