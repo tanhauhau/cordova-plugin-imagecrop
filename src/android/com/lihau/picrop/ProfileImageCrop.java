@@ -2,6 +2,7 @@ package com.lihau.picrop;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -14,6 +15,7 @@ import org.json.JSONObject;
  */
 public class ProfileImageCrop extends CordovaPlugin {
 
+    public static final String LOG_TAG = "profile-image-crop";
     private static final int REQUEST_CROP = 1;
     private CallbackContext callbackContext;
 
@@ -24,14 +26,16 @@ public class ProfileImageCrop extends CordovaPlugin {
         if (action.equals("crop")) {
             //Get options
             JSONObject options = args.optJSONObject(0);
-            String imageUri = options.optString("imageUri");
-            if(imageUri.length() == 0){
-                this.callbackContext.error("No imageUri");
-                return true;
+            String imageUri;
+            if (options == null){
+                callbackError("JSON_EXCEPTION");
+            }else if((imageUri = options.optString("imageUri")).length() == 0){
+                callbackError("NO_IMAGE_URI");
+            }else {
+                Intent intent = new Intent(cordova.getActivity(), ProfileImageCropActivity.class);
+                intent.putExtra(ProfileImageCropActivity.EXTRA_IMAGE_URI, imageUri);
+                cordova.startActivityForResult(this, intent, REQUEST_CROP);
             }
-            Intent intent = new Intent(cordova.getActivity(), ProfileImageCropActivity.class);
-            intent.putExtra(ProfileImageCropActivity.EXTRA_IMAGE_URI, imageUri);
-            cordova.startActivityForResult(this, intent, REQUEST_CROP);
             return true;
         }
         return false;
@@ -47,14 +51,16 @@ public class ProfileImageCrop extends CordovaPlugin {
                     this.callbackContext.success(resultObj);
                     return;
                 } catch(JSONException e){
+                    Log.e(LOG_TAG, "JSON_EXCEPTION", e);
                     callbackError("JSON_EXCEPTION");
                 }
             } else {
                 String errorMessage = data.getStringExtra(ProfileImageCropActivity.EXTRA_RESULT);
                 callbackError(errorMessage);
             }
+        }else {
+            callbackError("UNKNOWN_ERROR");
         }
-        callbackError("UNKNOWN_ERROR");
     }
 
     private void callbackError(String message){
@@ -64,6 +70,7 @@ public class ProfileImageCrop extends CordovaPlugin {
             errorObject.put("code", message);
             this.callbackContext.error(errorObject);
         }catch(JSONException e){
+            Log.e(LOG_TAG, "JSON_EXCEPTION", e);
             callbackError("JSON_EXCEPTION");
         }
     }

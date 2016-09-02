@@ -16,11 +16,9 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 
 import com.adamstyrc.cookiecutter.CookieCutterImageView;
-import com.adamstyrc.cookiecutter.CookieCutterShape;
 import com.adamstyrc.cookiecutter.ImageUtils;
 
 import java.io.File;
@@ -28,7 +26,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Locale;
 
 
 /**
@@ -55,7 +52,6 @@ public class ProfileImageCropActivity extends AppCompatActivity {
             Bitmap bmp = getScaledBitmap(imageUri, screenSize.x, screenSize.y);
 
             cookieCutter.setImageBitmap(bmp);
-            cookieCutter.getParams().setShape(CookieCutterShape.HOLE);
             cookieCutter.invalidate();
         } catch (IOException e) {
             returnErrorMessage("NO_SUCH_FILE");
@@ -64,16 +60,17 @@ public class ProfileImageCropActivity extends AppCompatActivity {
         chooseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            try {
-                Bitmap cropped = cookieCutter.getCroppedBitmap();
-                String savedUri = saveBitmap(cropped);
-                Intent result = new Intent();
-                result.putExtra(EXTRA_RESULT, savedUri);
-                setResult(RESULT_OK, result);
-                finish();
-            } catch (IOException e) {
-                returnErrorMessage("UNABLE_TO_SAVE");
-            }
+                try {
+                    Bitmap cropped = cookieCutter.getCroppedBitmap();
+                    String savedUri = saveBitmap(cropped);
+                    Intent result = new Intent();
+                    result.putExtra(EXTRA_RESULT, savedUri);
+                    setResult(RESULT_OK, result);
+                    finish();
+                } catch (IOException e) {
+                    returnErrorMessage("UNABLE_TO_SAVE");
+                    Log.e(ProfileImageCrop.LOG_TAG, "UNABLE_TO_SAVE", e);
+                }
             }
         });
 
@@ -104,31 +101,9 @@ public class ProfileImageCropActivity extends AppCompatActivity {
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeStream(FileHelper.getInputStreamFromUriString(imageUri, this), null, options);
         // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, width, height);
+        options.inSampleSize = ImageUtils.calculateInSampleSize(options, width, height);
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeStream(FileHelper.getInputStreamFromUriString(imageUri, this), null, options);
-    }
-
-    private int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height / 2> reqHeight || width > reqWidth) {
-
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) > reqHeight
-                    && (halfWidth / inSampleSize) > reqWidth) {
-                inSampleSize *= 2;
-            }
-        }
-        return inSampleSize;
     }
 
     private File getTempFile(String filename) throws IOException {
@@ -274,53 +249,6 @@ public class ProfileImageCropActivity extends AppCompatActivity {
                 returnValue = new FileInputStream(uriString);
             }
             return returnValue;
-        }
-
-        /**
-         * Removes the "file://" prefix from the given URI string, if applicable.
-         * If the given URI string doesn't have a "file://" prefix, it is returned unchanged.
-         *
-         * @param uriString the URI string to operate on
-         * @return a path without the "file://" prefix
-         */
-        public static String stripFileProtocol(String uriString) {
-            if (uriString.startsWith("file://")) {
-                uriString = uriString.substring(7);
-            }
-            return uriString;
-        }
-
-        public static String getMimeTypeForExtension(String path) {
-            String extension = path;
-            int lastDot = extension.lastIndexOf('.');
-            if (lastDot != -1) {
-                extension = extension.substring(lastDot + 1);
-            }
-            // Convert the URI string to lower case to ensure compatibility with MimeTypeMap (see CB-2185).
-            extension = extension.toLowerCase(Locale.getDefault());
-            if (extension.equals("3ga")) {
-                return "audio/3gpp";
-            }
-            return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-        }
-
-        /**
-         * Returns the mime type of the data specified by the given URI string.
-         *
-         * @param uriString the URI string of the data
-         * @return the mime type of the specified data
-         */
-        public static String getMimeType(String uriString, Context context) {
-            String mimeType = null;
-
-            Uri uri = Uri.parse(uriString);
-            if (uriString.startsWith("content://")) {
-                mimeType = context.getContentResolver().getType(uri);
-            } else {
-                mimeType = getMimeTypeForExtension(uri.getPath());
-            }
-
-            return mimeType;
         }
     }
     public static class FakeR {

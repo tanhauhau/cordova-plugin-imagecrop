@@ -20,27 +20,25 @@ NSURL* imageURL;
 
 - (void) crop:(CDVInvokedUrlCommand *)command{
     self.callbackId = command.callbackId;
-    NSDictionary* options = command.arguments[0] ?: [NSDictionary dictionary];
-    NSString* imageUri = options[@"imageUri"];
-    if(imageUri == nil){
-        CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
-        [self.commandDelegate sendPluginResult:result callbackId:self.callbackId];
-        return;
-    }
-    imageURL = [NSURL URLWithString:imageUri];
-    UIImage* sourceImage = [UIImage imageWithData: [NSData dataWithContentsOfURL: imageURL]];
-    RSKImageCropViewController *imageCropVC = [[RSKImageCropViewController alloc] initWithImage:sourceImage cropMode:RSKImageCropModeCircle];
+    NSDictionary* options = command.arguments[0];
+    NSString* imageUri;
+    if(options == nil){
+        [self callbackError:@"JSON_EXCEPTION"];
+    }else if((imageUri = options[@"imageUri"]) == nil){
+        [self callbackError:@"NO_IMAGE_URI"];
+    }else{
+        imageURL = [NSURL URLWithString:imageUri];
+        UIImage* sourceImage = [UIImage imageWithData: [NSData dataWithContentsOfURL: imageURL]];
+        RSKImageCropViewController *imageCropVC = [[RSKImageCropViewController alloc] initWithImage:sourceImage cropMode:RSKImageCropModeCircle];
 
-    imageCropVC.delegate = self;
-    [self.viewController showViewController:imageCropVC sender:nil];
+        imageCropVC.delegate = self;
+        [self.viewController showViewController:imageCropVC sender:nil];
+    }
 }
 
 -(void)imageCropViewController:(RSKImageCropViewController *)controller didCropImage:(UIImage *)croppedImage usingCropRect:(CGRect)cropRect {
     NSLog(@"ProfileImageCrop: Finish Crop");
     [controller.presentingViewController dismissViewControllerAnimated:YES completion:^{
-        if (ai != nil) {
-            [ai stopAnimating];
-        }
         //get the temp directory path
         NSString* docsPath = [NSTemporaryDirectory() stringByStandardizingPath];
         NSError* error = nil;
@@ -56,23 +54,28 @@ NSURL* imageURL;
         } while ([fileMgr fileExistsAtPath:filePath]);
 
         //save file
-        if(![data writeToFile:filePath options: NSAtomicWrite error:&error]){
-            CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageAsString:[error localizedDescription]];
-            [self.commandDelegate sendPluginResult:result callbackId: self.callbackId];
-            return;
+        if([data writeToFile:filePath options: NSAtomicWrite error:&error]){
+            //stop loading animation
+            if (ai != nil) {
+                [ai stopAnimating];
+            }
+
+            //return result uri
+            NSDictionary *resultDict = @{ @"resultUri" : [[NSURL fileURLWithPath:filePath] absoluteString] };
+            CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: resultDict];
+            [self.commandDelegate sendPluginResult:result callbackId:self.callbackId];
+        }else{
+            //save error
+            [self callbackError:@"UNABLE_TO_SAVE"];
+            NSLog([NSString stringWithFormat: @"ProfileImageCrop: UNABLE_TO_SAVE %@", error.localizedDescription], [NSThread callStackSymbols]);
         }
-        NSMutableDictionary *resultDict = [NSMutableDictionary dictionary];
-        [resultDict setValue: [[NSURL fileURLWithPath:filePath] absoluteString] forKey:@"resultUri"];
-        CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: resultDict];
-        [self.commandDelegate sendPluginResult:result callbackId:self.callbackId];
     }];
 }
 
 - (void)imageCropViewControllerDidCancelCrop:(RSKImageCropViewController *)controller {
     NSLog(@"ProfileImageCrop: User pressed cancel button");
     [controller.presentingViewController dismissViewControllerAnimated:YES completion:^{
-        CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
-        [self.commandDelegate sendPluginResult:result callbackId:self.callbackId];
+        [self callbackError:@"USER_CANCELLED"];
     }];
 }
 
@@ -80,6 +83,12 @@ NSURL* imageURL;
     ai = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: UIActivityIndicatorViewStyleWhite];
     ai.center = controller.view.center;
     [controller.view addSubview:ai];
+}
+
+- (void) callbackError: (NSString *) errorMessage {
+    NSDictionary* resultDict = @{ @"name": @"ProfileImageCrop", @"code": errorMessage };
+    CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT messageAsDictionary: resultDict];
+    [self.commandDelegate sendPluginResult:result callbackId:self.callbackId];
 }
 
 @end

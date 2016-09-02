@@ -2,9 +2,12 @@ package com.adamstyrc.cookiecutter;
 
 import android.graphics.Matrix;
 import android.graphics.PointF;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.lihau.picrop.ProfileImageCrop;
 
 /**
  * Created by adamstyrc on 31/03/16.
@@ -67,14 +70,14 @@ public class CookieCutterTouchListener implements View.OnTouchListener {
                 break;
         }
 
-        Logger.log(matrix.toString());
+        Log.d(ProfileImageCrop.LOG_TAG, matrix.toString());
         view.setImageMatrix(matrix);
         return true; // indicate event was handled
     }
 
     private void onImageScaled(ImageView view, float newDist) {
         float scale = newDist / fingersDistance;
-        Logger.log("Scale: " + scale);
+        Log.d(ProfileImageCrop.LOG_TAG, "Scale: " + scale);
 
         MatrixParams matrixParams = MatrixParams.fromMatrix(savedMatrix);
         float imageWidth = view.getDrawable().getIntrinsicWidth() * matrixParams.getScaleWidth();
@@ -88,25 +91,25 @@ public class CookieCutterTouchListener implements View.OnTouchListener {
         float imageLeft = scaleCenterPoint.x - savedDistanceLeft * scale;
         if (imageLeft > circle.getLeftBound()) {
             scale = (scaleCenterPoint.x - circle.getLeftBound()) / savedDistanceLeft;
-            Logger.log("Scaling exceeded: left " + scale);
+            Log.d(ProfileImageCrop.LOG_TAG, "Scaling exceeded: left " + scale);
         }
 
         float imageRight = scaleCenterPoint.x + savedDistanceRight * scale;
         if (imageRight < circle.getRightBound()) {
             scale = (circle.getRightBound() - scaleCenterPoint.x) / savedDistanceRight;
-            Logger.log("Scaling exceeded: right " + scale);
+            Log.d(ProfileImageCrop.LOG_TAG, "Scaling exceeded: right " + scale);
         }
 
         float imageTop = scaleCenterPoint.y - savedDistanceTop * scale;
         if (imageTop > circle.getTopBound()) {
             scale = (scaleCenterPoint.y - circle.getTopBound()) / savedDistanceTop;
-            Logger.log("Scaling exceeded: top " + scale);
+            Log.d(ProfileImageCrop.LOG_TAG, "Scaling exceeded: top " + scale);
         }
 
         float imageBottom = scaleCenterPoint.y + savedDistanceBottom * scale;
         if (imageBottom < circle.getBottomBound()) {
             scale = (circle.getBottomBound() - scaleCenterPoint.y) / savedDistanceBottom;
-            Logger.log("Scaling exceeded: bottom " + scale);
+            Log.d(ProfileImageCrop.LOG_TAG, "Scaling exceeded: bottom " + scale);
         }
 
         float currentScale = scale * matrixParams.getScaleWidth();
@@ -115,7 +118,7 @@ public class CookieCutterTouchListener implements View.OnTouchListener {
         }
 
         float croppedImageSize = circle.getDiameter() / currentScale;
-        Logger.log("croppedImageSize: " + croppedImageSize);
+        Log.d(ProfileImageCrop.LOG_TAG, "croppedImageSize: " + croppedImageSize);
         if (croppedImageSize < cookieCutterParams.getMinImageSize()) {
             scale = circle.getDiameter() / cookieCutterParams.getMinImageSize() / matrixParams.getScaleWidth();
         }
@@ -184,7 +187,7 @@ public class CookieCutterTouchListener implements View.OnTouchListener {
         }
         sb.append("]");
 
-        Logger.log(sb.toString());
+        Log.d(ProfileImageCrop.LOG_TAG, sb.toString());
     }
 
     /** Determine the space between the first two fingers */

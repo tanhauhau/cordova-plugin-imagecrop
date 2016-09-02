@@ -1,9 +1,9 @@
 {
   "name": "profile-image-crop",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Crop images for profile picture",
   "cordova": {
-    "id": "com.lihau.profileimagecrop",
+    "id": "profile-image-crop",
     "platforms": [
       "android",
       "ios"

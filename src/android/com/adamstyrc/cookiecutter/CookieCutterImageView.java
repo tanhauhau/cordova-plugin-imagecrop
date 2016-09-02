@@ -12,8 +12,11 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+
+import com.lihau.picrop.ProfileImageCrop;
 
 /**
  * Created by adamstyrc on 31/03/16.
@@ -105,24 +108,10 @@ public class CookieCutterImageView extends ImageView {
         }
 
         Paint paint;
-        switch (cookieCutterParams.getShape()) {
-            case CIRCLE:
-                paint = cookieCutterParams.getCircleParams().paint;
-                canvas.drawCircle(circle.getCx(), circle.getCy(), circle.getRadius(), paint);
-                break;
-
-            case HOLE:
-                CookieCutterParams.HoleParams hole = cookieCutterParams.getHoleParams();
-                paint = hole.paint;
-                Path path = hole.path;
-                canvas.drawPath(path, paint);
-                break;
-
-            case SQUARE:
-                paint = cookieCutterParams.getSquareParams().paint;
-                canvas.drawRect(circle.getLeftBound(), circle.getTopBound(), circle.getRightBound(), circle.getBottomBound(), paint);
-                break;
-        }
+        CookieCutterParams.HoleParams hole = cookieCutterParams.getHoleParams();
+        paint = hole.paint;
+        Path path = hole.path;
+        canvas.drawPath(path, paint);
     }
 
     @Override
@@ -160,7 +149,7 @@ public class CookieCutterImageView extends ImageView {
         int y = getCropTop(matrixParams, circle);
         int x = getCropLeft(matrixParams, circle);
 
-        Logger.log("x: " + x + " y: " + y + " size: " + size);
+        Log.d(ProfileImageCrop.LOG_TAG, "x: " + x + " y: " + y + " size: " + size);
         Bitmap croppedBitmap = Bitmap.createBitmap(bitmap,
                 x,
                 y,

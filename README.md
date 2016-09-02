@@ -1,5 +1,11 @@
 # profile-image-crop
 
+<!-- badge -->
+[![npm version](https://img.shields.io/npm/v/profile-image-crop.svg)](https://www.npmjs.com/package/profile-image-crop)
+[![npm license](https://img.shields.io/npm/l/profile-image-crop.svg)](https://www.npmjs.com/package/profile-image-crop)
+
+<!-- endbadge -->
+
 # Install
 
 ```bash
@@ -30,8 +36,26 @@ window.ProfileImageCrop.crop({
 })
 .catch(function(e){
    console.log(e);
+   /*
+    { name: 'ProfileImageCrop', code: '...' }
+   */
 })
 ```
+
+## Error Code
+
+**UNABLE\_TO\_SAVE** - Failed to save the cropped image to a temp file
+
+**NO\_SUCH\_FILE** - Image Uri given does not exist
+
+**USER\_CANCELLED** - User cancelled
+
+**NO\_IMAGE\_URI** - Empty Image Uri given
+
+**JSON\_EXCEPTION** - Failed to marshall or unmarshall json objects
+
+**UNKNOWN\_ERROR** - Unknown errors
+
 
 # Library Used
 
