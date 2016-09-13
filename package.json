@@ -1,6 +1,6 @@
 {
   "name": "profile-image-crop",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Crop images for profile picture",
   "cordova": {
     "id": "profile-image-crop",

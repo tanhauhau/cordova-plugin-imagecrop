@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="profile-image-crop" version="0.0.4" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
-    <name>profile-image-crop</name>
+<plugin id="profile-image-crop" version="0.0.5" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>Circular Image Cropper for Profile Image</name>
     <js-module name="ProfileImageCrop" src="www/profile-image-crop.js">
         <clobbers target="cordova.plugins.profile-image-crop" />
     </js-module>
