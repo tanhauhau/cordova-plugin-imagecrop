@@ -5,6 +5,7 @@
         <clobbers target="cordova.plugins.profile-image-crop" />
     </js-module>
     <platform name="android">
+        <framework src="com.android.support:appcompat-v7:+" />
         <config-file target="config.xml" parent="/*">
             <feature name="ProfileImageCrop">
                 <param name="android-package" value="com.lihau.picrop.ProfileImageCrop"/>
